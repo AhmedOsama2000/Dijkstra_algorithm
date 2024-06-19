@@ -1,30 +1,6 @@
 import sys
+from graph import Graph
 
-class Graph():
-    def __init__(self):
-        self.edges = {'X':['A','B','C','E'],
-                      'A':['X','B','D'],
-                      'B':['X','A','D','H'],
-                      'C':['X','L'],
-                      'E':['X'],
-                      'D':['A','B','F'],
-                      'F':['D','H'],
-                      'H':['B','F','G'],
-                      'G':['H','Y'],
-                      'L':['C','I','J'],
-                      'J':['I','L'],
-                      'I':['L','J','K'],
-                      'K':['I','Y'],
-                      'Y':['G','K'],
-        }
-
-        self.weights = {}
-    
-    def add_edge(self, from_node, to_node, weight):
-        #Edges are bidirectional
-        self.weights[(from_node, to_node)] = weight
-        self.weights[(to_node, from_node)] = weight
-        
 edges = [
     ('X', 'A', 7),
     ('X', 'B', 2),
@@ -48,7 +24,7 @@ edges = [
 
 graph = Graph()
 for edge in edges:
-    graph.add_edge(*edge)        
+    graph.add_edge(*edge)
 
 
 def dijsktra(graph, start, goal):
@@ -61,20 +37,20 @@ def dijsktra(graph, start, goal):
     #   end: ending node ex: 'Y'
     # returns:
     #   path: list of nodes in the path from initial to end nodes
-    unvisitedNodes = list(graph.edges.keys()) 
-    maxVal = sys.maxsize #maximum possible value
+    unvisitedNodes = list(graph.edges.keys())
+    maxVal = sys.maxsize  #maximum possible value
     shortestPath = {}
-    prevNode = {}   # Last node that leads to current Node
-   
+    prevNode = {}  # Last node that leads to current Node
+
     for count in unvisitedNodes:
-        shortestPath[count] = maxVal 
+        shortestPath[count] = maxVal
     shortestPath[start] = 0
 
     # Then iterate until lowest cost from the initial node and the goal node is found
     while unvisitedNodes:
         current_n = None
         for currentNode in unvisitedNodes:
-            if current_n == None:
+            if current_n is None:
                 current_n = currentNode
             elif shortestPath[currentNode] < shortestPath[current_n]:
                 current_n = currentNode
@@ -86,7 +62,7 @@ def dijsktra(graph, start, goal):
                 shortestPath[neighbor] = temp_shortest_path
                 prevNode[neighbor] = current_n
 
-        unvisitedNodes.remove(current_n) #remove the node after the operation to prevent an inifinit loop
+        unvisitedNodes.remove(current_n)  #remove the node after the operation to prevent an inifinit loop
     path = []
     node = goal
 
@@ -95,14 +71,13 @@ def dijsktra(graph, start, goal):
         node = prevNode[node]
 
     path.append(start)
-    
-    print(" - ".join(reversed(path)))  
-    print("Cost from" ,initial_node,"to",goal_node,"is",shortestPath[goal])
 
-initial_node = input("Enter Initial Node -> ")
+    print(" - ".join(reversed(path)))
+    print("Cost from", initial_node, "to", goal_node, "is", shortestPath[goal])
+
+
+initial_node = input('Enter Initial Node -> ')
 goal_node = input("Enter Goal Node -> ")
-print(initial_node,goal_node)
+print(initial_node, goal_node)
 
-dijsktra(graph = graph,start = initial_node,goal = goal_node)
-
-   
+dijsktra(graph=graph, start=initial_node, goal=goal_node)
